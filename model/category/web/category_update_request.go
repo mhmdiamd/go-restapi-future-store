@@ -1,8 +1,8 @@
-package domain
+package web
 
 import "github.com/google/uuid"
 
-type Category struct {
+type CategoryUpdateRequest struct {
 	Id   uuid.UUID
 	Name string
 }
