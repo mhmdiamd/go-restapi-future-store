@@ -1,9 +1,8 @@
-package domain
+package web
 
 import "github.com/google/uuid"
 
-type Product struct {
-	Id           uuid.UUID
+type CreateProductRequest struct {
 	Product_name string
 	Stock        int
 	Price        int

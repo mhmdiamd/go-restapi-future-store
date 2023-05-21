@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/mhmdiamd/go-restapi-future-store/exceptions"
 	"github.com/mhmdiamd/go-restapi-future-store/helpers"
 	"github.com/mhmdiamd/go-restapi-future-store/model/domain"
 )
@@ -23,7 +22,7 @@ func (c *CategoryRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, name st
 	id := helpers.GenerateUUID()
 	query := "INSERT INTO category VALUES($1, $2)"
 	rows, err := tx.QueryContext(ctx, query, id, name)
-	exceptions.PanicIfError(err)
+	helpers.PanicIfError(err)
 
 	defer rows.Close()
 
@@ -41,7 +40,7 @@ func (c *CategoryRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, categor
 	query := "UPDATE category SET name = $1 WHERE id = $2"
 	rows, err := tx.QueryContext(ctx, query, category.Name, category.Id)
 
-	exceptions.PanicIfError(err)
+	helpers.PanicIfError(err)
 	defer rows.Close()
 
 	return category
@@ -51,7 +50,7 @@ func (c *CategoryRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, categor
 	query := "DELETE FROM category WHERE id = $1"
 	rows, err := tx.QueryContext(ctx, query, categoryId)
 
-	exceptions.PanicIfError(err)
+	helpers.PanicIfError(err)
 	defer rows.Close()
 
 	return nil
@@ -60,13 +59,13 @@ func (c *CategoryRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, categor
 func (c *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, categoryId uuid.UUID) (domain.Category, error) {
 	query := "SELECT * FROM category WHERE id = $1"
 	rows, err := tx.QueryContext(ctx, query, categoryId)
-	exceptions.PanicIfError(err)
+	helpers.PanicIfError(err)
 	defer rows.Close()
 
 	var result = domain.Category{}
 	if rows.Next() {
 		err := rows.Scan(&result.Id, &result.Name)
-		exceptions.PanicIfError(err)
+		helpers.PanicIfError(err)
 
 		return result, nil
 	} else {
@@ -77,7 +76,7 @@ func (c *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, categ
 func (c *CategoryRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []domain.Category {
 	query := "SELECT * FROM category LIMIT 10"
 	rows, err := tx.QueryContext(ctx, query)
-	exceptions.PanicIfError(err)
+	helpers.PanicIfError(err)
 	defer rows.Close()
 
 	var categories []domain.Category
@@ -85,7 +84,7 @@ func (c *CategoryRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []doma
 	for rows.Next() {
 		category := domain.Category{}
 		err := rows.Scan(&category.Id, &category.Name)
-		exceptions.PanicIfError(err)
+		helpers.PanicIfError(err)
 
 		categories = append(categories, category)
 	}

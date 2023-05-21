@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/julienschmidt/httprouter"
+	"github.com/mhmdiamd/go-restapi-future-store/exceptions"
 	"github.com/mhmdiamd/go-restapi-future-store/src/category/controller"
 )
 
@@ -13,6 +14,8 @@ func CategoryRouter(categoryController controller.CategoryController) *httproute
 	router.POST("/api/categories", categoryController.Create)
 	router.PUT("/api/categories/:categoryId", categoryController.Update)
 	router.DELETE("/api/categories/:categoryId", categoryController.Delete)
+
+	router.PanicHandler = exceptions.ErrorHandler
 
 	return router
 }

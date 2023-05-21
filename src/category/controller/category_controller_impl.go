@@ -7,9 +7,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
-	"github.com/mhmdiamd/go-restapi-future-store/exceptions"
 	"github.com/mhmdiamd/go-restapi-future-store/helpers"
-	"github.com/mhmdiamd/go-restapi-future-store/model/category/web"
+	httpResponse "github.com/mhmdiamd/go-restapi-future-store/model/web"
+	categoryWeb "github.com/mhmdiamd/go-restapi-future-store/model/web/category"
 	"github.com/mhmdiamd/go-restapi-future-store/src/category/service"
 
 	_ "github.com/lib/pq"
@@ -28,17 +28,17 @@ func NewCategoryController(service service.CategoryService) CategoryController {
 func (controller *CategoryControllerImpl) Create(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
 	// Buat Decoder untuk melakukan decode request body dari data stream ke bentuk json
 	decoder := json.NewDecoder(req.Body)
-	categoryCreateRequest := web.CategoryCreateRequest{}
+	categoryCreateRequest := categoryWeb.CategoryCreateRequest{}
 
 	// Encode data json dan memasukanya ke dalam variable categoryCreateRequest
 	err := decoder.Decode(&categoryCreateRequest)
-	exceptions.PanicIfError(err)
+	helpers.PanicIfError(err)
 
 	// Kirim data ke service
 	response, err := controller.CategoryService.Create(req.Context(), categoryCreateRequest)
-	exceptions.PanicIfError(err)
+	helpers.PanicIfError(err)
 
-	webResponse := helpers.WebResponse{
+	webResponse := httpResponse.WebResponse{
 		Code:   200,
 		Status: "OK",
 		Data:   response,
@@ -54,16 +54,16 @@ func (controller *CategoryControllerImpl) Update(w http.ResponseWriter, req *htt
 	newId := uuid.MustParse(categoryId)
 
 	// Decode request body to json
-	categoryUpdateRequest := web.CategoryUpdateRequest{}
+	categoryUpdateRequest := categoryWeb.CategoryUpdateRequest{}
 	helpers.ReadRequestBody(req, &categoryUpdateRequest)
 
 	categoryUpdateRequest.Id = newId
 
 	// Send Data to service
 	response, err := controller.CategoryService.Update(req.Context(), categoryUpdateRequest)
-	exceptions.PanicIfError(err)
+	helpers.PanicIfError(err)
 
-	webResponse := helpers.WebResponse{
+	webResponse := httpResponse.WebResponse{
 		Code:   200,
 		Status: "OK",
 		Data:   response,
@@ -80,7 +80,7 @@ func (controller *CategoryControllerImpl) Delete(w http.ResponseWriter, req *htt
 	// Send Data to service
 	controller.CategoryService.Delete(req.Context(), newId)
 
-	webResponse := helpers.WebResponse{
+	webResponse := httpResponse.WebResponse{
 		Code:   200,
 		Status: "OK",
 	}
@@ -97,7 +97,7 @@ func (controller *CategoryControllerImpl) FindById(w http.ResponseWriter, req *h
 	// Send Data to service
 	response := controller.CategoryService.FindById(req.Context(), newId)
 
-	webResponse := helpers.WebResponse{
+	webResponse := httpResponse.WebResponse{
 		Code:   200,
 		Status: "OK",
 		Data:   response,
@@ -109,7 +109,7 @@ func (controller *CategoryControllerImpl) FindById(w http.ResponseWriter, req *h
 func (controller *CategoryControllerImpl) FindAll(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
 	// Send Data to service
 	response := controller.CategoryService.FindAll(req.Context())
-	webResponse := helpers.WebResponse{
+	webResponse := httpResponse.WebResponse{
 		Code:   200,
 		Status: "OK",
 		Data:   response,
