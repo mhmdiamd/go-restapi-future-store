@@ -6,13 +6,11 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/julienschmidt/httprouter"
 	"github.com/mhmdiamd/go-restapi-future-store/app"
-	"github.com/mhmdiamd/go-restapi-future-store/helpers"
-	"github.com/mhmdiamd/go-restapi-future-store/src/category/controller"
-	"github.com/mhmdiamd/go-restapi-future-store/src/category/repository"
-	"github.com/mhmdiamd/go-restapi-future-store/src/category/service"
-	pController "github.com/mhmdiamd/go-restapi-future-store/src/product/controller"
-	pRepository "github.com/mhmdiamd/go-restapi-future-store/src/product/repository"
-	pService "github.com/mhmdiamd/go-restapi-future-store/src/product/service"
+	"github.com/mhmdiamd/go-restapi-future-store/lib/controller/category"
+	"github.com/mhmdiamd/go-restapi-future-store/lib/controller/product"
+	"github.com/mhmdiamd/go-restapi-future-store/lib/helpers"
+	"github.com/mhmdiamd/go-restapi-future-store/lib/repository"
+	"github.com/mhmdiamd/go-restapi-future-store/lib/service"
 )
 
 func main() {
@@ -22,11 +20,11 @@ func main() {
 
 	categoryRepository := repository.NewCategoryRepository()
 	categoryService := service.NewCategoryService(categoryRepository, db, *validate)
-	categoryController := controller.NewCategoryController(categoryService)
+	categoryController := category.NewCategoryController(categoryService)
 
-	productRepository := pRepository.NewProductRepository()
-	productService := pService.NewProductService(productRepository, db, *validate)
-	productController := pController.NewProductController(productService)
+	productRepository := repository.NewProductRepository()
+	productService := service.NewProductService(productRepository, db, *validate)
+	productController := product.NewProductController(productService)
 
 	router.GET("/api/categories", categoryController.FindAll)
 	router.GET("/api/categories/:categoryId", categoryController.FindById)
