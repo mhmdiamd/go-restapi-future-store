@@ -23,7 +23,7 @@ func NewProductController(service service.ProductService) ProductController {
 
 func (controller *ProductControllerImpl) Create(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
 	// Convert data stream to json
-	requestBody := response.CreateProductRequest{}
+	requestBody := response.ProductCreateRequest{}
 	helpers.ReadRequestBody(req, &requestBody)
 
 	// Call servicee

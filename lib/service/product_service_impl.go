@@ -26,7 +26,7 @@ func NewProductService(productRepository repository.ProductRepository, Db *sql.D
 	}
 }
 
-func (service *ProductServiceImpl) Create(ctx context.Context, product response.CreateProductRequest) (response.ProductResponse, error) {
+func (service *ProductServiceImpl) Create(ctx context.Context, product response.ProductCreateRequest) (response.ProductResponse, error) {
 
 	// do Validation First
 	validatedErr := service.Validate.Struct(product)

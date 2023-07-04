@@ -17,7 +17,7 @@ func NewProductRepository() ProductRepository {
 	return &ProductRepositoryImpl{}
 }
 
-func (repository *ProductRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, product response.CreateProductRequest) (Product, error) {
+func (repository *ProductRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, product response.ProductCreateRequest) (Product, error) {
 	id := helpers.GenerateUUID()
 	query := "INSERT INTO product(id, product_name, stock, price, description, photo, id_category) VALUES($1, $2, $3, $4, $5, $6, $7)"
 	rows, err := tx.QueryContext(ctx, query,

@@ -9,7 +9,7 @@ import (
 )
 
 type ProductRepository interface {
-	Save(ctx context.Context, tx *sql.Tx, product response.CreateProductRequest) (Product, error)
+	Save(ctx context.Context, tx *sql.Tx, product response.ProductCreateRequest) (Product, error)
 	FindById(ctx context.Context, tx *sql.Tx, productId uuid.UUID) (Product, error)
 	Update(ctx context.Context, tx *sql.Tx, product Product) (Product, error)
 	Delete(ctx context.Context, tx *sql.Tx, productId uuid.UUID)

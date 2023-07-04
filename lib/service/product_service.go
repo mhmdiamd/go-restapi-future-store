@@ -8,7 +8,7 @@ import (
 )
 
 type ProductService interface {
-	Create(ctx context.Context, product response.CreateProductRequest) (response.ProductResponse, error)
+	Create(ctx context.Context, product response.ProductCreateRequest) (response.ProductResponse, error)
 	Update(ctx context.Context, product response.UpdateProductRequest) (response.ProductResponse, error)
 	Delete(ctx context.Context, productId uuid.UUID)
 	FindById(ctx context.Context, productId uuid.UUID) response.ProductResponse
