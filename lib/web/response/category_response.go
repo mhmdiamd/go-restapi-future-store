@@ -11,6 +11,7 @@ type CategoryUpdateRequest struct {
 	Id   uuid.UUID
 	Name string
 }
+
 type CategoryCreateRequest struct {
 	Name string `validate:"required"`
 }

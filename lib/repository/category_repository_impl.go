@@ -2,12 +2,13 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 
+	"github.com/jmoiron/sqlx"
+
 	"github.com/google/uuid"
-	"github.com/mhmdiamd/go-restapi-future-store/lib/helpers"
+	"github.com/mhmdiamd/go-restapi-future-store/helper"
 )
 
 type CategoryRepositoryImpl struct {
@@ -17,11 +18,11 @@ func NewCategoryRepository() CategoryRepository {
 	return &CategoryRepositoryImpl{}
 }
 
-func (c *CategoryRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, name string) (Category, error) {
-	id := helpers.GenerateUUID()
-	query := "INSERT INTO category VALUES($1, $2)"
+func (c *CategoryRepositoryImpl) Create(ctx context.Context, tx *sqlx.Tx, name string) (Category, error) {
+	id := helper.GenerateUUID()
+	query := "INSERT INTO categories VALUES($1, $2)"
 	rows, err := tx.QueryContext(ctx, query, id, name)
-	helpers.PanicIfError(err)
+	helper.PanicIfError(err)
 
 	defer rows.Close()
 
@@ -33,38 +34,38 @@ func (c *CategoryRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, name st
 	return result, nil
 }
 
-func (c *CategoryRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, category Category) Category {
+func (c *CategoryRepositoryImpl) Update(ctx context.Context, tx *sqlx.Tx, category Category) Category {
 
 	fmt.Println(category)
-	query := "UPDATE category SET name = $1 WHERE id = $2"
+	query := "UPDATE categories SET name = $1 WHERE id = $2"
 	rows, err := tx.QueryContext(ctx, query, category.Name, category.Id)
 
-	helpers.PanicIfError(err)
+	helper.PanicIfError(err)
 	defer rows.Close()
 
 	return category
 }
 
-func (c *CategoryRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, categoryId uuid.UUID) error {
-	query := "DELETE FROM category WHERE id = $1"
+func (c *CategoryRepositoryImpl) Delete(ctx context.Context, tx *sqlx.Tx, categoryId uuid.UUID) error {
+	query := "DELETE FROM categories WHERE id = $1"
 	rows, err := tx.QueryContext(ctx, query, categoryId)
 
-	helpers.PanicIfError(err)
+	helper.PanicIfError(err)
 	defer rows.Close()
 
 	return nil
 }
 
-func (c *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, categoryId uuid.UUID) (Category, error) {
-	query := "SELECT * FROM category WHERE id = $1"
+func (c *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sqlx.Tx, categoryId uuid.UUID) (Category, error) {
+	query := "SELECT * FROM categories WHERE id = $1"
 	rows, err := tx.QueryContext(ctx, query, categoryId)
-	helpers.PanicIfError(err)
+	helper.PanicIfError(err)
 	defer rows.Close()
 
 	var result = Category{}
 	if rows.Next() {
 		err := rows.Scan(&result.Id, &result.Name)
-		helpers.PanicIfError(err)
+		helper.PanicIfError(err)
 
 		return result, nil
 	} else {
@@ -72,10 +73,10 @@ func (c *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, categ
 	}
 }
 
-func (c *CategoryRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []Category {
-	query := "SELECT * FROM category LIMIT 10"
+func (c *CategoryRepositoryImpl) FindAll(ctx context.Context, tx *sqlx.Tx) []Category {
+	query := "SELECT * FROM categories LIMIT 10"
 	rows, err := tx.QueryContext(ctx, query)
-	helpers.PanicIfError(err)
+	helper.PanicIfError(err)
 	defer rows.Close()
 
 	var categories []Category
@@ -83,7 +84,7 @@ func (c *CategoryRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []Cate
 	for rows.Next() {
 		category := Category{}
 		err := rows.Scan(&category.Id, &category.Name)
-		helpers.PanicIfError(err)
+		helper.PanicIfError(err)
 
 		categories = append(categories, category)
 	}

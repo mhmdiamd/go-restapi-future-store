@@ -1,15 +1,15 @@
 package app
 
 import (
-	"database/sql"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
-func NewDB() *sql.DB {
-	connStr := "user=postgres password=ilham dbname=go_future_store port=5432 host=localhost"
-	db, err := sql.Open("postgres", connStr)
+func NewDB() *sqlx.DB {
+	connStr := "user=postgres password=postgres dbname=go_future_store port=5432 host=localhost"
+	db, err := sqlx.Open("postgres", connStr)
 
 	if err != nil {
 		panic(err)

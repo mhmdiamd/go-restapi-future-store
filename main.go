@@ -4,47 +4,43 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
 	"github.com/mhmdiamd/go-restapi-future-store/app"
-	"github.com/mhmdiamd/go-restapi-future-store/lib/controller/category"
-	"github.com/mhmdiamd/go-restapi-future-store/lib/controller/product"
-	"github.com/mhmdiamd/go-restapi-future-store/lib/helpers"
-	"github.com/mhmdiamd/go-restapi-future-store/lib/repository"
-	"github.com/mhmdiamd/go-restapi-future-store/lib/service"
+	"github.com/mhmdiamd/go-restapi-future-store/exception"
+	"github.com/mhmdiamd/go-restapi-future-store/helper"
+	myRouter "github.com/mhmdiamd/go-restapi-future-store/router"
 )
 
+
 func main() {
-	db := app.NewDB()
+
+  err := godotenv.Load(".env.local") 
+  helper.PanicIfError(err)
+
+  db := app.NewDB()
 	validate := validator.New()
-	var router = httprouter.New()
+	router := httprouter.New()
 
-	categoryRepository := repository.NewCategoryRepository()
-	categoryService := service.NewCategoryService(categoryRepository, db, *validate)
-	categoryController := category.NewCategoryController(categoryService)
+	//Initialize Category router
+	myRouter.AuthRouter(router, db, validate)
+	myRouter.UserRouter(router, db, validate)
+  myRouter.CategoryRouter(router, db, validate)
+	myRouter.ProductRouter(router, db, validate)
+	myRouter.SellerRouter(router, db, validate)
+	myRouter.ImageRouter(router, db, validate)
 
-	productRepository := repository.NewProductRepository()
-	productService := service.NewProductService(productRepository, db, *validate)
-	productController := product.NewProductController(productService)
+	// authMiddleware := middleware.NewAuthMiddleware(router)
 
-	router.GET("/api/categories", categoryController.FindAll)
-	router.GET("/api/categories/:categoryId", categoryController.FindById)
-	router.POST("/api/categories", categoryController.Create)
-	router.PUT("/api/categories/:categoryId", categoryController.Update)
-	router.DELETE("/api/categories/:categoryId", categoryController.Delete)
-
-	router.GET("/api/products", productController.FindAll)
-	router.GET("/api/products/:productId", productController.FindById)
-	router.POST("/api/products", productController.Create)
-	router.PUT("/api/products/:productId", productController.Update)
-	router.DELETE("/api/products/:productId", productController.Delete)
+	router.PanicHandler = exception.ErrorHandler
 
 	server := http.Server{
-		Addr:    "localhost:3000",
 		Handler: router,
+		Addr:    "localhost:8000",
+    
 	}
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 
-	helpers.PanicIfError(err)
-
+	helper.PanicIfError(err)
 }
