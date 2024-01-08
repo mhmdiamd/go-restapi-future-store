@@ -10,5 +10,6 @@ import (
 
 type ImageService interface {
   UploadProductImage(ctx context.Context, body dto.CreateProductImageDto) (domain.ProductImage) 
+  UpdateProductImage(ctx context.Context, body dto.UpdateProductImageDto) (domain.ProductImage) 
   GetAllByIdProduct(ctx context.Context, id_product uuid.UUID) []domain.ProductImage
 }

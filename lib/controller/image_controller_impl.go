@@ -52,3 +52,41 @@ func (c *ImageControllerImpl) UploadProductImage(w http.ResponseWriter, req *htt
 
   helper.WriteToResponseBody(w, webResponse)
 }
+
+func (c *ImageControllerImpl) UpdateProductImage(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
+
+  userId := req.Header.Get("id_user")
+  parsedUuid := uuid.MustParse(userId)
+  
+  file, fileHeader, err := req.FormFile("photo")
+  id_product_image := params.ByName("id")
+
+  parsedId := uuid.MustParse(id_product_image)
+
+  helper.PanicIfError(err)
+
+  fileHandler := dto.FileHandler{
+    FileHeader: fileHeader,
+    File: file,
+  }
+
+  body := dto.UpdateProductImageDto{
+    File: fileHandler,
+    Id_product_image: parsedId, 
+    User_id: parsedUuid,
+  }
+
+  result := c.ProductImageService.UpdateProductImage(req.Context(), body)
+
+  webResponse := web.WebResponse {
+    Status: "Success",
+    Code: http.StatusOK,
+    Data: result,
+  }
+
+  helper.WriteToResponseBody(w, webResponse)
+}
+
+
+
+

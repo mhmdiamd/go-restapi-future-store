@@ -8,4 +8,5 @@ import (
 
 type ImageController interface {
   UploadProductImage(w http.ResponseWriter, req *http.Request, params httprouter.Params)
+  UpdateProductImage(w http.ResponseWriter, req *http.Request, params httprouter.Params)
 }

@@ -18,9 +18,20 @@ type CreateProductImageDto struct {
   Product_id string 
 }
 
+type UpdateProductImageDto struct {
+  File FileHandler
+  User_id uuid.UUID
+  Id_product_image  uuid.UUID
+}
+
 type CreateProductBody struct {
   Name string `db:"name"`
   Product_id string `db:"product_id"`
   Url string `db:"url"`
 }
 
+
+type UpdateProductBody struct {
+  Id_product_image uuid.UUID `db:"id"`
+  Name string `db:"name"`
+}

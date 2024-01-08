@@ -54,6 +54,30 @@ func (s *ImageServiceImpl) UploadProductImage(ctx context.Context, data dto.Crea
  return result
 }
 
+func (s *ImageServiceImpl) UpdateProductImage(ctx context.Context, data dto.UpdateProductImageDto) domain.ProductImage {
+  fileIdentity, err := helper.DecodedImage(data.File, data.User_id)
+
+  if err != nil {
+    panic(exception.NewForbiddenError(err.Error()))
+  }
+
+  body := dto.UpdateProductBody{
+    Name: fileIdentity.Filename,
+    Id_product_image : data.Id_product_image,
+  }
+
+  tx := s.DB.MustBegin()
+  defer helper.CommitOrRollback(tx)
+
+  result, err := s.imageRepository.UpdateProductImage(ctx, tx, body)
+
+  if err != nil {
+    panic(exception.NewForbiddenError(err.Error()))
+  }
+
+ return result
+}
+
 func (s *ImageServiceImpl) GetAllByIdProduct(ctx context.Context, id_product uuid.UUID) []domain.ProductImage {
 
   tx := s.DB.MustBegin()

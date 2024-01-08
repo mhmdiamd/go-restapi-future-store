@@ -42,6 +42,27 @@ func (r *ImageRepositoryImpl) UploadProductImage(ctx context.Context, tx *sqlx.T
 	return newProductImage, nil
 }
 
+func (r *ImageRepositoryImpl) UpdateProductImage(ctx context.Context, tx *sqlx.Tx, body dto.UpdateProductBody) (domain.ProductImage, error) {
+
+  query := `UPDATE images_product SET name=$2 WHERE id=$1 RETURNING id, name, url, product_id`
+  row := tx.QueryRowContext(ctx, query, body.Id_product_image, body.Name)
+
+  var newProductImage = domain.ProductImage{}
+
+  err := row.Scan(
+    &newProductImage.Id,
+    &newProductImage.Name,
+    &newProductImage.Product_id,
+    &newProductImage.Url,
+  )
+
+  if err != nil {
+    return newProductImage, err
+  }
+
+	return newProductImage, nil
+}
+
 func (r *ImageRepositoryImpl) GetAllByIdProduct(ctx context.Context, tx *sqlx.Tx, id_product uuid.UUID) []domain.ProductImage {
   query := "SELECT * FROM images_product WHERE id_product=$1"
   rows, err := tx.QueryContext(ctx, query, id_product)
