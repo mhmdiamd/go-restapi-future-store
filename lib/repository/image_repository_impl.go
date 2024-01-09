@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/mhmdiamd/go-restapi-future-store/exception"
 	"github.com/mhmdiamd/go-restapi-future-store/helper"
 	"github.com/mhmdiamd/go-restapi-future-store/lib/web/dto"
 	"github.com/mhmdiamd/go-restapi-future-store/model/domain"
@@ -16,6 +17,35 @@ type ImageRepositoryImpl struct {
 
 func NewImageRepositoryImpl() ImageRepository {
   return &ImageRepositoryImpl{}
+}
+
+
+func (r *ImageRepositoryImpl) FindProductImageById(ctx context.Context, tx *sqlx.Tx, Id_product_image uuid.UUID) (domain.ProductImage, error) {
+  
+	query := `SELECT id, name, product_id, url FROM images_product WHERE id=$1 LIMIT 1`
+  row, err := tx.QueryxContext(ctx, query, Id_product_image)
+
+  helper.PanicIfError(err)
+
+  var newProductImage = domain.ProductImage{}
+
+  if !row.Next() {
+    panic(exception.NewNotFoundError("Product image not found"))
+  }else {
+    err := row.Scan(
+      &newProductImage.Id,
+      &newProductImage.Name,
+      &newProductImage.Product_id,
+      &newProductImage.Url,
+    )
+  
+    if err != nil {
+      fmt.Println(err)
+      return newProductImage, err
+    }
+  }
+
+	return newProductImage, nil
 }
 
 func (r *ImageRepositoryImpl) UploadProductImage(ctx context.Context, tx *sqlx.Tx, body dto.CreateProductBody) (domain.ProductImage, error) {
@@ -61,6 +91,18 @@ func (r *ImageRepositoryImpl) UpdateProductImage(ctx context.Context, tx *sqlx.T
   }
 
 	return newProductImage, nil
+}
+
+func (r *ImageRepositoryImpl) DeleteProductImage(ctx context.Context, tx *sqlx.Tx, Id_product_image uuid.UUID) error {
+  
+	query := `DELETE FROM images_product WHERE id=$1`
+  _, err := tx.ExecContext(ctx, query, Id_product_image)
+
+  if err != nil {
+    return err
+  }
+
+	return nil
 }
 
 func (r *ImageRepositoryImpl) GetAllByIdProduct(ctx context.Context, tx *sqlx.Tx, id_product uuid.UUID) []domain.ProductImage {

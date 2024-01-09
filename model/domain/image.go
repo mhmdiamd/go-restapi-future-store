@@ -9,10 +9,10 @@ import (
 )
 
 type ProductImage struct {
-  Id uuid.UUID `json:"id"`
-  Name string `json:"name"`
-  Url string `json:"url"`
-  Product_id string `json:"product_id"`
+  Id uuid.UUID `db:"id" json:"id"`
+  Name string `db:"name" json:"name"`
+  Url string `db:"url" json:"url"`
+  Product_id string `db:"product_id" json:"product_id"`
 }
 
 type JSONBArray []ProductImage

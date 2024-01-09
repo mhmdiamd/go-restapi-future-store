@@ -53,6 +53,23 @@ func (c *ImageControllerImpl) UploadProductImage(w http.ResponseWriter, req *htt
   helper.WriteToResponseBody(w, webResponse)
 }
 
+func (c *ImageControllerImpl) DeleteProductImage(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
+
+  id_product_image := params.ByName("id")
+
+  parsedUUID := uuid.MustParse(id_product_image)
+
+  msg := c.ProductImageService.DeleteProductImage(req.Context(), parsedUUID)
+
+  webResponse := web.WebResponse {
+    Status: "Success",
+    Code: http.StatusOK,
+    Data: msg,
+  }
+
+  helper.WriteToResponseBody(w, webResponse)
+}
+
 func (c *ImageControllerImpl) UpdateProductImage(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
 
   userId := req.Header.Get("id_user")

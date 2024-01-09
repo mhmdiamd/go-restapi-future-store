@@ -18,7 +18,9 @@ func ImageRouter(r *httprouter.Router, db *sqlx.DB, v *validator.Validate) {
 
   uploadProductImage := middleware.IsAuthMiddleware(middleware.IsSellerMiddleware(imageController.UploadProductImage))
   updateProductImage := middleware.IsAuthMiddleware(middleware.IsSellerMiddleware(imageController.UpdateProductImage))
+  deleteProductImage := middleware.IsAuthMiddleware(middleware.IsSellerMiddleware(imageController.DeleteProductImage))
 
+  r.DELETE("/api/v1/uploads/product-image/:id", deleteProductImage)
   r.POST("/api/v1/uploads/product-image", uploadProductImage)
   r.PUT("/api/v1/uploads/product-image/:id", updateProductImage)
 }

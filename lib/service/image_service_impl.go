@@ -27,6 +27,21 @@ func NewImageServiceImpl(repository repository.ImageRepository, db *sqlx.DB, val
   }
 }
 
+
+func (s *ImageServiceImpl) FindProductImageById(ctx context.Context, Id_product_image uuid.UUID) domain.ProductImage {
+
+  tx := s.DB.MustBegin()
+  defer helper.CommitOrRollback(tx)
+
+  result, err := s.imageRepository.FindProductImageById(ctx, tx, Id_product_image)
+
+  if err != nil {
+    panic(exception.NewForbiddenError(err.Error()))
+  }
+
+ return result
+}
+
 func (s *ImageServiceImpl) UploadProductImage(ctx context.Context, data dto.CreateProductImageDto) domain.ProductImage {
   url := "https://example.com"
 
@@ -77,6 +92,24 @@ func (s *ImageServiceImpl) UpdateProductImage(ctx context.Context, data dto.Upda
 
  return result
 }
+
+func (s *ImageServiceImpl) DeleteProductImage(ctx context.Context, Id_product_image uuid.UUID) string {
+
+  tx := s.DB.MustBegin()
+  defer helper.CommitOrRollback(tx)
+
+  // Check is the product exist
+  s.FindProductImageById(ctx, Id_product_image)
+
+  err := s.imageRepository.DeleteProductImage(ctx, tx, Id_product_image)
+
+  if err != nil {
+    helper.PanicIfError(err)
+  }
+
+  return "Success delete product image"
+}
+
 
 func (s *ImageServiceImpl) GetAllByIdProduct(ctx context.Context, id_product uuid.UUID) []domain.ProductImage {
 
