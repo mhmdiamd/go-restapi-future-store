@@ -30,6 +30,10 @@ type CreateProductBody struct {
   Url string `db:"url"`
 }
 
+type UploadSellerPhotoDTO struct {
+  File FileHandler
+  User_id uuid.UUID
+}
 
 type UpdateProductBody struct {
   Id_product_image uuid.UUID `db:"id"`

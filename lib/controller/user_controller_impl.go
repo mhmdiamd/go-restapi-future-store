@@ -25,10 +25,13 @@ func NewUserControllerImpl(service service.UserService) UserController {
 
 func (c *UserControllerImpl) Update(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
 
-  userId := p.ByName("id")
+  userId := p.ByName("userId")
   newId := uuid.MustParse(userId)
 
+  role := req.Header.Get("role")
+
   var requestBody dto.UserUpdateDTO
+  requestBody.Role = role
   err := json.NewDecoder(req.Body).Decode(&requestBody)
 
   requestBody.ID = newId
@@ -52,7 +55,7 @@ func (c *UserControllerImpl) Update(w http.ResponseWriter, req *http.Request, p 
 
 func (c *UserControllerImpl) GetProfile(w http.ResponseWriter, req *http.Request, p httprouter.Params){
   
-  userId := p.ByName("id")
+  userId := p.ByName("userId")
   fmt.Println(userId)
 
   newId := uuid.MustParse(userId)

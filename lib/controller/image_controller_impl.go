@@ -107,3 +107,8 @@ func (c *ImageControllerImpl) UpdateProductImage(w http.ResponseWriter, req *htt
 
 
 
+
+
+
+
+

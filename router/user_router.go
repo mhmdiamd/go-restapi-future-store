@@ -15,6 +15,6 @@ func UserRouter(r *httprouter.Router, db *sqlx.DB, v *validator.Validate) {
 	userService := service.NewUserServiceImpl(userRepository, db, v)
 	userController := controller.NewUserControllerImpl(userService)
 
-  r.PUT("/api/v1/user/:id", userController.Update)
-  r.GET("/api/v1/user/:id", userController.GetProfile)
+  r.PUT("/api/v1/users/:userId", userController.Update)
+  r.GET("/api/v1/users/:userId/profile", userController.GetProfile)
 }

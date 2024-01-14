@@ -118,3 +118,7 @@ func (s *ImageServiceImpl) GetAllByIdProduct(ctx context.Context, id_product uui
   images := s.imageRepository.GetAllByIdProduct(ctx, tx, id_product)
   return images
 }
+
+
+
+

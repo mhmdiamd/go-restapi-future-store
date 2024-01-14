@@ -29,6 +29,8 @@ func main() {
 	myRouter.ProductRouter(router, db, validate)
 	myRouter.SellerRouter(router, db, validate)
 	myRouter.ImageRouter(router, db, validate)
+	myRouter.CartRouter(router, db, validate)
+	myRouter.ShippingAddressRouter(router, db, validate)
 
 	// authMiddleware := middleware.NewAuthMiddleware(router)
 

@@ -17,3 +17,4 @@ type ProductCreateDTO struct {
   Id_user uuid.UUID `db:"id_user"`
 }
 
+

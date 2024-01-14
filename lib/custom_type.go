@@ -19,6 +19,10 @@ type NullInt64 struct {
 	sql.NullInt64
 }
 
+type NullFile struct {
+  sql.NullByte
+}
+
 func (s NullInt64) MarshalJSON() ([]byte, error) {
 	if !s.Valid {
 		return []byte("null"), nil

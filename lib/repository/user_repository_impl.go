@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -20,18 +21,29 @@ func NewUserRepositoryImpl() UserRepository {
 }
 
 func (r *UserRepositoryImpl) Update(c context.Context, tx *sqlx.Tx, body dto.UserUpdateDTO) (domain.User, error) {
+  fmt.Println(body)
+
+  query := "UPDATE users SET name=$1, birth_date=$2, store_name=$3, description=$4, role=$5, phone=$6, address=$7 WHERE id=$8 RETURNING id, name, email, birth_date, store_name, description, role, phone, address, photo"
+  row := tx.QueryRowContext(c,query, body.Name, body.Birth_date, body.Store_name, body.Description, body.Role, body.Phone, body.Address, body.ID)
 
   var newUser domain.User
-  query := "UPDATE users SET name=$1, birth_date=$2, store_name=$2, description=$3, role=$4, phone=$5, address=$6, photo=$7"
 
-  err := tx.GetContext(c, &newUser, query, body.Name, body.Birth_date, body.Store_name, body.Role, body.Phone, body.Address, body.Photo, body.Description)
+  err := row.Scan(
+    &newUser.Id,
+    &newUser.Name,
+    &newUser.Email,
+    &newUser.Birth_date,
+    &newUser.Store_name,
+    &newUser.Description,
+    &newUser.Role,
+    &newUser.Phone,
+    &newUser.Address,
+    &newUser.Photo,
+  )
 
-  if err != nil {
-    helper.PanicIfError(err)
-  }
+  helper.PanicIfError(err)
 
   return newUser, nil
-
 }
 
 

@@ -48,12 +48,16 @@ create table users (
 );
 
 /* Table User address */
-
 create table shipping_addresses (
   id varchar(255) primary key,
   id_user varchar(255) REFERENCES users ON DELETE CASCADE,
   foreign key(id_user) REFERENCES users(id),
-  description TEXT,
+  place VARCHAR(255) NOT NULL,
+  recipient_name VARCHAR(255) NOT NULL,
+  recipient_phone CHAR(18) NOT NULL,
+  address TEXT,
+  postal_code CHAR(10) NOT NULL,
+  city_or_subdistrict VARCHAR(255) NOT NULL,
   is_active boolean,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -65,9 +69,9 @@ create table carts (
   foreign key(id_user) REFERENCES users(id),
   id_product varchar(255) REFERENCES products ON DELETE CASCADE,
   foreign key(id_product) REFERENCES products(id), 
-  description TEXT,
+  qty int NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 create table shipping (
@@ -80,7 +84,7 @@ create table shipping (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-create table user_orders (
+create table orders (
   id varchar(255) primary key,
   id_carts varchar(255) REFERENCES carts ON DELETE CASCADE,
   foreign key(id_carts) REFERENCES carts(id),

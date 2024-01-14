@@ -16,7 +16,7 @@ import (
 type ProductRepositoryImpl struct {
 }
 
-func NewProductRepository() ProductRepository {
+func NewProductRepositoryImpl() ProductRepository {
 	return &ProductRepositoryImpl{}
 }
 
@@ -48,8 +48,8 @@ func (repository *ProductRepositoryImpl) Save(ctx context.Context, tx *sqlx.Tx, 
 func (repository *ProductRepositoryImpl) FindById(ctx context.Context, tx *sqlx.Tx, productId uuid.UUID) (domain.Product, error) {
   var result domain.Product
 
-  query := "SELECT * FROM products WHERE id = $1 LIMIT 1"
-	err := tx.GetContext(ctx, &result, query)
+  query := "SELECT * FROM products WHERE id=$1 LIMIT 1"
+	err := tx.GetContext(ctx, &result, query, productId)
 	helper.PanicIfError(err)
 
   if err != nil {

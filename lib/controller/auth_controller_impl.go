@@ -24,7 +24,7 @@ func NewAuthControllerImpl(authService service.AuthService) AuthController {
 func(c *AuthControllerImpl) SignUp(res http.ResponseWriter, req *http.Request, params httprouter.Params){
   // create object request body
   requestBody := response.SignUpRequestDTO{
-    Role: "seller",
+    Role: "customer",
   }
 
   // Create Decoder for decoded request body

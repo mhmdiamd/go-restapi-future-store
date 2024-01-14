@@ -43,7 +43,7 @@ func DecodedImage(file dto.FileHandler, id uuid.UUID) (FileIdentity, error) {
 
   // Handler is type image available or not
   if !IsImage(file.FileHeader.Filename) {
-    return fileIdentity, errors.New("Image type is not available")
+    return fileIdentity, errors.New("Image type is not available, only jpg, png & jpeg")
   }
 
   imageExtension := GetImageExtension(file.FileHeader.Filename)

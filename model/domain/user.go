@@ -19,9 +19,37 @@ type User struct {
 	Photo       lib.NullString `db:"photo"`
 }
 
+type UserPhoto struct {
+  Url  string `json:"url"`
+}
+
+type Seller struct {
+	Id          uuid.UUID      `json:"id"`
+	Name        string         `json:"name"`
+	Email       string         `json:"email" validate:"required"`
+	Birth_date  lib.NullTime   `json:"birth_date"`
+	Store_name  lib.NullString `json:"store_name"`
+	Description lib.NullString `json:"description"`
+	Role        string         `json:"role"`
+	Phone       lib.NullInt64  `json:"phone"`
+	Address     lib.NullString `json:"address"`
+	Photo       lib.NullString `json:"photo"`
+}
+
+type Customer struct {
+	Id          uuid.UUID      `db:"id"`
+	Name        string         `db:"name"`
+	Email       string         `db:"email" validate:"required"`
+	Birth_date  lib.NullTime   `db:"birth_date"`
+	Role        string         `db:"role"`
+	Phone       lib.NullInt64  `db:"phone"`
+	Address     lib.NullString `db:"address"`
+	Photo       lib.NullString `db:"photo"`
+}
+
 type Authentication struct {
-	Email    string `db:""`
-	Password string `db:""`
+	Email    string `db:"email"`
+	Password string `db:"password"`
 }
 
 type Token struct {

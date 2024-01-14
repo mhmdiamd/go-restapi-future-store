@@ -23,7 +23,7 @@ type ProductServiceImpl struct {
 	Validate   *validator.Validate
 }
 
-func NewProductService(productRepository repository.ProductRepository, Db *sqlx.DB, validate *validator.Validate) ProductService {
+func NewProductServiceImpl(productRepository repository.ProductRepository, Db *sqlx.DB, validate *validator.Validate) ProductService {
 	return &ProductServiceImpl{
 		repository: productRepository,
 		DB:         Db,

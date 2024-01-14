@@ -12,14 +12,29 @@ import (
 )
 
 func SellerRouter(r *httprouter.Router, db *sqlx.DB, v *validator.Validate) {
-	productRepository := repository.NewProductRepository()
-	productService := service.NewProductService(productRepository, db, v)
+	productRepository := repository.NewProductRepositoryImpl()
+	productService := service.NewProductServiceImpl(productRepository, db, v)
 
   // Image 
   imageRepository := repository.NewImageRepositoryImpl()
   imageService := service.NewImageServiceImpl(imageRepository, db, v)
 
+  // Seller
+  sellerRepository := repository.NewSellerRepositoryImpl()
+  sellerService := service.NewSellerServiceImpl(sellerRepository, db, v)
+	sellerController := controller.NewSellerControllerImpl(sellerService)
+
+  sellerUpdate := middleware.IsAuthMiddleware(middleware.IsSellerMiddleware(sellerController.Update))
+
 	productController := controller.NewProductController(productService, imageService)
 
-  r.GET("/api/v1/users/seller/products", middleware.IsAuthMiddleware(middleware.IsSellerMiddleware(productController.FindAllByIdSeller)))
+  uploadPhoto := middleware.IsAuthMiddleware(middleware.IsSellerMiddleware(sellerController.UploadPhoto))
+
+  r.PUT("/api/v1/sellers/:id", sellerUpdate)
+
+  // Seller Product
+  r.GET("/api/v1/sellers/users/products", middleware.IsAuthMiddleware(middleware.IsSellerMiddleware(productController.FindAllByIdSeller)))
+  
+  // Seller Upload
+  r.POST("/api/v1/seller/users/upload",uploadPhoto)
 }

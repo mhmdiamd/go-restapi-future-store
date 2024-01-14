@@ -12,8 +12,8 @@ import (
 )
 
 func ProductRouter(r *httprouter.Router, db *sqlx.DB, v *validator.Validate) {
-	productRepository := repository.NewProductRepository()
-	productService := service.NewProductService(productRepository, db, v)
+	productRepository := repository.NewProductRepositoryImpl()
+	productService := service.NewProductServiceImpl(productRepository, db, v)
   
   // Image 
   imageRepository := repository.NewImageRepositoryImpl()
